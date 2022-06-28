@@ -21,6 +21,10 @@ class AppResponse extends Response {
       return ResponseModel(error: error.toString(), message: message ?? error.message);
     }
 
+    if (error is AuthorizationParserException) {
+      return ResponseModel(error: error.toString(), message: message ?? "Не удалось получить данные об авторизации");
+    }
+
     return ResponseModel(error: error.toString(), message: message ?? error.message ?? "Неизвестная ошибка");
   }
 
