@@ -29,4 +29,7 @@ class AppResponse extends Response {
   }
 
   AppResponse.ok({dynamic body, String? message}) : super.ok(ResponseModel(data: body, message: message));
+
+  AppResponse.badRequest({String? message})
+      : super.badRequest(body: ResponseModel(message: message ?? "Ошибка запроса"));
 }
