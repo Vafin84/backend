@@ -17,7 +17,7 @@ class AppService extends ApplicationChannel {
   @override
   Controller get entryPoint => Router()
     ..route("token/[:refresh]").link(() => AppAuthController(managedContext))
-    ..route("user").link(() => AppTokenController())!.link(() => AppUserController(managedContext));
+    ..route("user/[:all]").link(() => AppTokenController())!.link(() => AppUserController(managedContext));
 
   PostgreSQLPersistentStore _initDatabase() {
     final username = Platform.environment["DB_USERNAME"] ?? "admin";
@@ -25,12 +25,6 @@ class AppService extends ApplicationChannel {
     final host = Platform.environment["DB_HOST"] ?? "127.0.0.1";
     final port = int.parse(Platform.environment["DB_PORT"] ?? "5432");
     final databaseName = Platform.environment["DB_NAME"] ?? "postgres";
-    return PostgreSQLPersistentStore(
-      username,
-      password,
-      host,
-      port,
-      databaseName,
-    );
+    return PostgreSQLPersistentStore(username, password, host, port, databaseName);
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:auth/models/user.dart';
@@ -10,6 +11,20 @@ class AppUserController extends ResourceController {
   final ManagedContext managedContext;
 
   AppUserController(this.managedContext);
+
+  @Operation.get("all")
+  Future<Response> getUsers(
+      @Bind.path("all") String all, @Bind.header(HttpHeaders.authorizationHeader) String header) async {
+    try {
+      final qFindUsers = Query<User>(managedContext)
+        ..returningProperties((table) => [table.id, table.username, table.email]);
+      final users = await qFindUsers.fetch();
+      return AppResponse.ok(
+          body: users.map((e) => e.backing.contents).toList(), message: "Успешное получение списка пользователей");
+    } catch (error) {
+      return AppResponse.serverError(error, message: "Ошибка получение списка пользователей");
+    }
+  }
 
   @Operation.get()
   Future<Response> getProfile(@Bind.header(HttpHeaders.authorizationHeader) String header) async {
